@@ -1,4 +1,4 @@
-package com.felpeto.rent.input.controller.configuration;
+package com.felpeto.rent.adapter.input.controller.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

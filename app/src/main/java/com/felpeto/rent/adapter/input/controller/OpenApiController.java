@@ -1,4 +1,4 @@
-package com.felpeto.rent.input.controller;
+package com.felpeto.rent.adapter.input.controller;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;

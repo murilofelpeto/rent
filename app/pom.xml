@@ -35,6 +35,7 @@
     <assertj.version>3.22.0</assertj.version>
     <junit-jupiter.version>5.8.2</junit-jupiter.version>
     <mockito.version>4.4.0</mockito.version>
+    <commons-lang3.version>3.12.0</commons-lang3.version>
   </properties>
 
   <dependencyManagement>
@@ -96,6 +97,12 @@
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
+
 
     <!-- Tests -->
     <dependency>
@@ -205,10 +212,10 @@
         <version>${swagger-maven-plugin.version}</version>
         <configuration>
           <resourcePackages>
-            <resourcePackage>com.felpeto.rent.input.controller</resourcePackage>
+            <resourcePackage>com.felpeto.rent.adapter.input.controller</resourcePackage>
           </resourcePackages>
           <outputDirectory>
-            ${basedir}/target/resources/com/felpeto/rent/controller
+            ${basedir}/target/resources/com/felpeto/rent/adapter/input/controller
           </outputDirectory>
           <outputFilename>openapi</outputFilename>
           <outputFormats>JSON,YAML</outputFormats>
@@ -221,6 +228,30 @@
             <goals>
               <goal>generate</goal>
             </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>copy-resources</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${basedir}/target/classes</outputDirectory>
+              <includeEmptyDirs>true</includeEmptyDirs>
+              <resources>
+                <resource>
+                  <directory>${basedir}/target/resources</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
           </execution>
         </executions>
       </plugin>

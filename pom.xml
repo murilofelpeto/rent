@@ -165,7 +165,7 @@
         </executions>
         <configuration>
           <excludes>
-            <exclude>com/felpeto/rent/*Application.*</exclude>
+            <exclude>com/felpeto/rent/adapter/input/controller/configuration/*ObjectMapperConfiguration.*</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -197,7 +197,7 @@
             <param>${mutation.scan.test}</param>
           </targetTests>
           <excludedClasses>
-            <param>com.felpeto.rent.Application</param>
+            <param>com.felpeto.rent.adapter.input.controller.configuration.ObjectMapperConfiguration</param>
           </excludedClasses>
           <skip>${mutation.skip}</skip>
         </configuration>

@@ -1,9 +1,9 @@
-package com.felpeto.rent.input.controller;
+package com.felpeto.rent.adapter.input.controller;
 
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import com.felpeto.rent.input.controller.dto.request.PropertyRequestDto;
-import com.felpeto.rent.input.controller.dto.response.PropertyResponseDto;
+import com.felpeto.rent.adapter.input.controller.dto.request.PropertyRequestDto;
+import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,18 +47,18 @@ public class PropertyController {
                   mediaType = APPLICATION_JSON,
                   array = @ArraySchema(schema = @Schema(implementation = PropertyResponseDto.class))))
       })
-  public Response createProperty(final PropertyRequestDto propertyRequestDto) {
-    log.info("creating property {}", propertyRequestDto);
+  public Response createProperty(final PropertyRequestDto request) {
+    log.info("creating property {}", request);
     final var response = PropertyResponseDto.builder()
-        .city(propertyRequestDto.getCity())
-        .complement(propertyRequestDto.getComplement())
-        .country(propertyRequestDto.getCountry())
+        .city(request.getCity())
+        .complement(request.getComplement())
+        .country(request.getCountry())
         .id(UUID.randomUUID())
-        .propertyKind(propertyRequestDto.getPropertyKind())
-        .number(propertyRequestDto.getNumber())
-        .state(propertyRequestDto.getState())
-        .streetName(propertyRequestDto.getStreetName())
-        .zipCode(propertyRequestDto.getZipCode())
+        .propertyKind(request.getPropertyKind())
+        .number(request.getNumber())
+        .state(request.getState())
+        .streetName(request.getStreetName())
+        .zipCode(request.getZipCode())
         .build();
 
     return Response.status(Status.CREATED).entity(response).build();
@@ -144,17 +144,17 @@ public class PropertyController {
       })
   public Response updateProperty(
       @NotNull @Schema(format = "uuid") @PathParam("id") final String uuid,
-      final PropertyRequestDto propertyRequestDto) {
+      final PropertyRequestDto request) {
     final var response = PropertyResponseDto.builder()
-        .city(propertyRequestDto.getCity())
-        .complement(propertyRequestDto.getComplement())
-        .country(propertyRequestDto.getCountry())
+        .city(request.getCity())
+        .complement(request.getComplement())
+        .country(request.getCountry())
         .id(UUID.fromString(uuid))
-        .propertyKind(propertyRequestDto.getPropertyKind())
-        .number(propertyRequestDto.getNumber())
-        .state(propertyRequestDto.getState())
-        .streetName(propertyRequestDto.getStreetName())
-        .zipCode(propertyRequestDto.getZipCode())
+        .propertyKind(request.getPropertyKind())
+        .number(request.getNumber())
+        .state(request.getState())
+        .streetName(request.getStreetName())
+        .zipCode(request.getZipCode())
         .build();
 
     return Response.ok().entity(response).build();

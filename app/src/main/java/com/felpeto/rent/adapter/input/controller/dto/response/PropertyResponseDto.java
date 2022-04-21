@@ -1,5 +1,6 @@
-package com.felpeto.rent.input.controller.dto.request;
+package com.felpeto.rent.adapter.input.controller.dto.response;
 
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -13,8 +14,9 @@ import lombok.ToString;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class PropertyRequestDto {
+public class PropertyResponseDto {
 
+  private UUID id;
   private String propertyKind;
   private String country;
   private String state;
@@ -23,5 +25,4 @@ public class PropertyRequestDto {
   private String streetName;
   private Integer number;
   private String complement;
-
 }
