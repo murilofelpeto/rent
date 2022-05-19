@@ -1,14 +1,16 @@
 package com.felpeto.rent.adapter.input.controller;
 
+import static com.felpeto.rent.adapter.input.controller.mapper.PropertyMapper.toProperty;
+import static com.felpeto.rent.adapter.input.controller.mapper.PropertyResponseMapper.toPropertyResponse;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import com.felpeto.rent.adapter.input.controller.dto.request.PropertyRequestDto;
 import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
+import com.felpeto.rent.core.usecase.CreatePropertyUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import java.util.List;
 import java.util.UUID;
@@ -28,16 +30,18 @@ import lombok.extern.slf4j.Slf4j;
 @Path("/v1/properties")
 public class PropertyController {
 
+  private final CreatePropertyUseCase createPropertyUseCase;
+
+  public PropertyController(
+      final CreatePropertyUseCase createPropertyUseCase) {
+    this.createPropertyUseCase = createPropertyUseCase;
+  }
+
   @POST
   @Produces(APPLICATION_JSON)
   @Consumes(APPLICATION_JSON)
   @Operation(
-      summary = "Get all houses",
-      requestBody =
-      @RequestBody(
-          required = true,
-          content = @Content(
-              schema = @Schema(implementation = PropertyRequestDto.class))),
+      summary = "Create a property",
       responses = {
           @ApiResponse(
               responseCode = "201",
@@ -49,17 +53,9 @@ public class PropertyController {
       })
   public Response createProperty(final PropertyRequestDto request) {
     log.info("creating property {}", request);
-    final var response = PropertyResponseDto.builder()
-        .city(request.getCity())
-        .complement(request.getComplement())
-        .country(request.getCountry())
-        .id(UUID.randomUUID())
-        .propertyKind(request.getPropertyKind())
-        .number(request.getNumber())
-        .state(request.getState())
-        .streetName(request.getStreetName())
-        .zipCode(request.getZipCode())
-        .build();
+    final var property = toProperty(request);
+
+    final var response = toPropertyResponse(createPropertyUseCase.createProperty(property));
 
     return Response.status(Status.CREATED).entity(response).build();
   }

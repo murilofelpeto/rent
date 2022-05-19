@@ -1,28 +1,48 @@
 package com.felpeto.rent.adapter.input.controller;
 
+import static com.felpeto.rent.adapter.input.controller.mapper.PropertyMapper.toProperty;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
+import static org.mockito.Mockito.when;
 
-import com.felpeto.rent.adapter.input.controller.PropertyController;
 import com.felpeto.rent.adapter.input.controller.dto.request.PropertyRequestDto;
 import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
+import com.felpeto.rent.core.usecase.CreatePropertyUseCase;
 import com.github.javafaker.Faker;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class PropertyControllerTest {
 
-  private static final List<String> PROPERTIES_KINDS = List.of("House", "Apartment", "farm");
+  private static final List<String> PROPERTIES_KINDS = List.of(
+      "single-family",
+      "public",
+      "land",
+      "warehouses");
+
   private final Faker faker = new Faker(new Locale("pt-BR"));
-  private final PropertyController controller = new PropertyController();
+
+  @Mock
+  private CreatePropertyUseCase createPropertyUseCase;
+
+  @InjectMocks
+  private PropertyController controller;
 
   @Test
   @DisplayName("given property request when create property then return created property")
   void givenPropertyRequestWhenCreatePropertyThenReturnCreatedProperty() {
     final var request = createPropertyRequest();
+    final var property = toProperty(request);
+
+    when(createPropertyUseCase.createProperty(property)).thenReturn(property);
 
     final var response = controller.createProperty(request);
 
@@ -37,7 +57,8 @@ class PropertyControllerTest {
     final var response = controller.getProperties();
 
     assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getEntity()).isNotNull().asInstanceOf(list(PropertyResponseDto.class));
+    assertThat(response.getEntity()).isNotNull()
+        .asInstanceOf(list(PropertyResponseDto.class));
 
   }
 

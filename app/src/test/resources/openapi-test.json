@@ -32,7 +32,7 @@
         }
       },
       "post" : {
-        "summary" : "Get all houses",
+        "summary" : "Create a property",
         "operationId" : "createProperty",
         "requestBody" : {
           "content" : {
@@ -41,8 +41,7 @@
                 "$ref" : "#/components/schemas/PropertyRequestDto"
               }
             }
-          },
-          "required" : true
+          }
         },
         "responses" : {
           "201" : {
@@ -126,6 +125,7 @@
   "components" : {
     "schemas" : {
       "PropertyRequestDto" : {
+        "required" : [ "city", "complement", "country", "number", "property_kind", "state", "street_name", "zip_code" ],
         "type" : "object",
         "properties" : {
           "city" : {
@@ -141,16 +141,20 @@
             "type" : "integer",
             "format" : "int32"
           },
-          "propertyKind" : {
-            "type" : "string"
+          "property_kind" : {
+            "type" : "string",
+            "enum" : [ "single-family", "multi-family", "townhouses", "condominiums", "apartments", "manufactured", "public", "retail", "office", "co-working", "land", "heavy-manufacturing", "light-manufacturing", "warehouses", "distribution-facilities" ]
           },
           "state" : {
+            "maxLength" : 2,
+            "minLength" : 2,
+            "type" : "string",
+            "description" : "We expect an abbreviation of the state"
+          },
+          "street_name" : {
             "type" : "string"
           },
-          "streetName" : {
-            "type" : "string"
-          },
-          "zipCode" : {
+          "zip_code" : {
             "type" : "string"
           }
         }

@@ -1,0 +1,8 @@
+<FindBugsFilter>
+  <Match>
+    <Or>
+      <Package name="~com\.felpeto\.rent\.adapter\.output\.mysql\.entity.*"/>
+    </Or>
+    <Bug pattern="EI_EXPOSE_REP, EI_EXPOSE_REP2"/>
+  </Match>
+</FindBugsFilter>
