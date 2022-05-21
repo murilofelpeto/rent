@@ -8,6 +8,7 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import com.felpeto.rent.adapter.input.controller.dto.request.PageDto;
 import com.felpeto.rent.adapter.input.controller.dto.request.PropertyRequestDto;
 import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
+import com.felpeto.rent.adapter.input.controller.handler.dto.ErrorDto;
 import com.felpeto.rent.core.usecase.PropertyCreatorUseCase;
 import com.felpeto.rent.core.usecase.PropertyGetterUseCase;
 import com.felpeto.rent.core.usecase.PropertyUpdaterUseCase;
@@ -86,7 +87,14 @@ public class PropertyController {
                   array = @ArraySchema(schema = @Schema(implementation = PropertyResponseDto.class)))),
           @ApiResponse(
               responseCode = "204",
-              description = "empty list")
+              description = "empty list"),
+          @ApiResponse(
+              responseCode = "422",
+              description = "Unprocessable Entity",
+              content =
+              @Content(
+                  mediaType = APPLICATION_JSON,
+                  schema = @Schema(implementation = ErrorDto.class)))
       })
   public Response getProperties(@NotNull @Valid @BeanParam PageDto pageDto) {
     final var page = toPage(pageDto);

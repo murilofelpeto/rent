@@ -14,6 +14,7 @@ import com.felpeto.rent.adapter.output.mysql.repository.PropertyRepository;
 import com.felpeto.rent.core.domain.Page;
 import com.felpeto.rent.core.domain.Property;
 import com.felpeto.rent.core.domain.vo.PropertyKind;
+import com.felpeto.rent.core.usecase.exception.EntityNotFoundException;
 import com.github.javafaker.Faker;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +99,7 @@ class GetPropertyGatewayTest {
 
     assertThatThrownBy(() -> getPropertyGateway.getPropertyByUuid(uuid))
         .hasMessage(format(PROPERTY_NOT_FOUND, uuid))
-        .isExactlyInstanceOf(RuntimeException.class);
+        .isExactlyInstanceOf(EntityNotFoundException.class);
 
     verify(propertyRepository).findByUuid(uuid);
     verifyNoMoreInteractions(propertyRepository);

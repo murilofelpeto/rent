@@ -6,6 +6,7 @@ import static java.text.MessageFormat.format;
 import com.felpeto.rent.adapter.output.mysql.repository.PropertyRepository;
 import com.felpeto.rent.core.domain.Page;
 import com.felpeto.rent.core.domain.Property;
+import com.felpeto.rent.core.usecase.exception.EntityNotFoundException;
 import com.felpeto.rent.core.usecase.port.GetPropertyPort;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +31,7 @@ public class GetPropertyGateway implements GetPropertyPort {
   @Override
   public Property getPropertyByUuid(final UUID uuid) {
     final var property = propertyRepository.findByUuid(uuid)
-        .orElseThrow(() -> new RuntimeException(format(PROPERTY_NOT_FOUND, uuid)));
+        .orElseThrow(() -> new EntityNotFoundException(format(PROPERTY_NOT_FOUND, uuid)));
 
     return toProperty(property);
   }

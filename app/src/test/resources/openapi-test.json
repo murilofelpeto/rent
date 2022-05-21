@@ -34,6 +34,7 @@
         }, {
           "name" : "_sort",
           "in" : "query",
+          "required" : true,
           "schema" : {
             "type" : "string"
           }
@@ -54,6 +55,16 @@
           },
           "204" : {
             "description" : "empty list"
+          },
+          "422" : {
+            "description" : "Unprocessable Entity",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorDto"
+                }
+              }
+            }
           }
         }
       },
@@ -160,6 +171,39 @@
   },
   "components" : {
     "schemas" : {
+      "ErrorDto" : {
+        "type" : "object",
+        "properties" : {
+          "fields" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Field"
+            }
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "statusCode" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        }
+      },
+      "Field" : {
+        "type" : "object",
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
       "PropertyRequestDto" : {
         "required" : [ "city", "complement", "country", "number", "property_kind", "state", "street_name", "zip_code" ],
         "type" : "object",

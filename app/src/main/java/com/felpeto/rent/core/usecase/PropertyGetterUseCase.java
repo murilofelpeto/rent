@@ -20,7 +20,6 @@ public class PropertyGetterUseCase {
   }
 
   public List<Property> getProperties(final Page page) {
-
     return getPropertyPort.getAllProperties(page);
   }
 

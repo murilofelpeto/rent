@@ -20,6 +20,7 @@ import com.felpeto.rent.core.domain.vo.State;
 import com.felpeto.rent.core.domain.vo.StreetName;
 import com.felpeto.rent.core.domain.vo.Tenant;
 import com.felpeto.rent.core.domain.vo.ZipCode;
+import com.felpeto.rent.core.usecase.exception.DuplicateEntityException;
 import com.github.javafaker.Faker;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.UUID;
@@ -88,7 +89,7 @@ class CreatePropertyGatewayTest {
         .persistAndFlush(entity);
 
     assertThatThrownBy(() -> createPropertyGateway.create(property))
-        .isExactlyInstanceOf(RuntimeException.class)
+        .isExactlyInstanceOf(DuplicateEntityException.class)
         .hasMessage(format(PROPERTY_EXISTS, property.getUuid()));
 
     verify(propertyRepository).persistAndFlush(entity);

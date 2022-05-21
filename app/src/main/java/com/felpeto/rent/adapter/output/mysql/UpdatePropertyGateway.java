@@ -6,6 +6,8 @@ import static java.text.MessageFormat.format;
 import com.felpeto.rent.adapter.output.mysql.entity.PropertyEntity;
 import com.felpeto.rent.adapter.output.mysql.repository.PropertyRepository;
 import com.felpeto.rent.core.domain.Property;
+import com.felpeto.rent.core.usecase.exception.EntityNotFoundException;
+import com.felpeto.rent.core.usecase.exception.NoUpdatableException;
 import com.felpeto.rent.core.usecase.port.UpdatePropertyPort;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
@@ -37,7 +39,7 @@ public class UpdatePropertyGateway implements UpdatePropertyPort {
   @Transactional
   public Property updateProperty(final UUID uuid, final Property property) {
     final var propertyEntity = propertyRepository.findByUuid(uuid)
-        .orElseThrow(() -> new RuntimeException(format(PROPERTY_NOT_FOUND, uuid)));
+        .orElseThrow(() -> new EntityNotFoundException(format(PROPERTY_NOT_FOUND, uuid)));
 
     final var result = propertyRepository.update(UPDATE_QUERY,
         property.getAddress().getZipCode().getValue(),
@@ -50,7 +52,7 @@ public class UpdatePropertyGateway implements UpdatePropertyPort {
         uuid);
 
     if (result != 1) {
-      throw new RuntimeException(UPDATE_ERROR);
+      throw new NoUpdatableException(UPDATE_ERROR);
     }
 
     propertyRepository.getEntityManager().refresh(propertyEntity);

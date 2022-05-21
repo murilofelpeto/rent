@@ -6,6 +6,7 @@ import static java.text.MessageFormat.format;
 
 import com.felpeto.rent.adapter.output.mysql.repository.PropertyRepository;
 import com.felpeto.rent.core.domain.Property;
+import com.felpeto.rent.core.usecase.exception.DuplicateEntityException;
 import com.felpeto.rent.core.usecase.port.CreatePropertyPort;
 import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.PersistenceException;
@@ -43,7 +44,7 @@ public class CreatePropertyGateway implements CreatePropertyPort {
         final var cause = ((ConstraintViolationException) exception.getCause()).getConstraintName();
         if (ADDRESS_CONSTRAINT_NAME.equals(cause) || UUID_CONSTRAINT_NAME.equals(cause)) {
           log.error(format(PROPERTY_EXISTS, property.getUuid()));
-          throw new RuntimeException(format(PROPERTY_EXISTS, property.getUuid()));
+          throw new DuplicateEntityException(format(PROPERTY_EXISTS, property.getUuid()));
         }
       }
       throw exception;

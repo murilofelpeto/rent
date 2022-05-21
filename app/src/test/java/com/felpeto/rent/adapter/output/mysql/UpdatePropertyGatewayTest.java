@@ -21,6 +21,8 @@ import com.felpeto.rent.core.domain.vo.State;
 import com.felpeto.rent.core.domain.vo.StreetName;
 import com.felpeto.rent.core.domain.vo.Tenant;
 import com.felpeto.rent.core.domain.vo.ZipCode;
+import com.felpeto.rent.core.usecase.exception.EntityNotFoundException;
+import com.felpeto.rent.core.usecase.exception.NoUpdatableException;
 import com.github.javafaker.Faker;
 import java.util.Optional;
 import java.util.UUID;
@@ -109,7 +111,7 @@ class UpdatePropertyGatewayTest {
 
     assertThatThrownBy(() -> updatePropertyGateway.updateProperty(uuid, property))
         .hasMessage(format(PROPERTY_NOT_FOUND, uuid))
-        .isExactlyInstanceOf(RuntimeException.class);
+        .isExactlyInstanceOf(EntityNotFoundException.class);
 
     verify(propertyRepository).findByUuid(uuid);
     verifyNoMoreInteractions(propertyRepository);
@@ -137,7 +139,7 @@ class UpdatePropertyGatewayTest {
 
     assertThatThrownBy(() -> updatePropertyGateway.updateProperty(uuid, property))
         .hasMessage(UPDATE_ERROR)
-        .isExactlyInstanceOf(RuntimeException.class);
+        .isExactlyInstanceOf(NoUpdatableException.class);
 
     verify(propertyRepository).findByUuid(uuid);
     verify(propertyRepository).update(UPDATE_QUERY, property.getAddress().getZipCode().getValue(),
@@ -184,7 +186,7 @@ class UpdatePropertyGatewayTest {
 
     assertThatThrownBy(() -> updatePropertyGateway.updateProperty(uuid, property))
         .hasMessage(UPDATE_ERROR)
-        .isExactlyInstanceOf(RuntimeException.class);
+        .isExactlyInstanceOf(NoUpdatableException.class);
 
     verify(propertyRepository).findByUuid(uuid);
     verify(propertyRepository).update(UPDATE_QUERY, property.getAddress().getZipCode().getValue(),
