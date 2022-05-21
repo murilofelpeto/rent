@@ -46,10 +46,10 @@ class PropertyKindTest {
 
   private static Stream<Arguments> invalidParams() {
     return Stream.of(
-        arguments(faker.hobbit().location(), IllegalArgumentException.class),
-        arguments("", IllegalArgumentException.class),
-        arguments("  ", IllegalArgumentException.class),
-        arguments(null, NullPointerException.class));
+        arguments(faker.hobbit().location(), new IllegalArgumentException()),
+        arguments("", new IllegalArgumentException()),
+        arguments("  ", new IllegalArgumentException()),
+        arguments(null, new NullPointerException()));
   }
 
   @ParameterizedTest

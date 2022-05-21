@@ -2,10 +2,13 @@ package com.felpeto.rent.adapter.output.mysql.mapper;
 
 import static com.felpeto.rent.adapter.output.mysql.mapper.PropertyMapper.toProperty;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 import com.felpeto.rent.adapter.output.mysql.entity.PropertyEntity;
+import com.felpeto.rent.core.domain.Property;
 import com.felpeto.rent.core.domain.vo.PropertyKind;
 import com.github.javafaker.Faker;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +35,18 @@ class PropertyMapperTest {
       assertThat(address.getCountry().getValue()).isEqualTo(entity.getCountry());
       assertThat(address.getComplement()).isEqualTo(entity.getComplement());
     });
+  }
+
+  @Test
+  void givenListOfPropertiesEntityWhenMappingThenReturnProperty() {
+    final var entities = List.of(createPropertyEntity(), createPropertyEntity());
+
+    final var property = toProperty(entities);
+
+    assertThat(property).isNotNull()
+        .asInstanceOf(list(Property.class))
+        .hasSize(2);
+
   }
 
   private PropertyEntity createPropertyEntity() {

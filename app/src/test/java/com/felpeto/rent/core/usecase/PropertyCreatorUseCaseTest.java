@@ -25,7 +25,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class CreatePropertyUseCaseTest {
+class PropertyCreatorUseCaseTest {
 
   private final Faker faker = new Faker();
 
@@ -33,7 +33,7 @@ class CreatePropertyUseCaseTest {
   private CreatePropertyPort createPropertyPort;
 
   @InjectMocks
-  private CreatePropertyUseCase createPropertyUseCase;
+  private PropertyCreatorUseCase propertyCreatorUseCase;
 
   @Test
   void givenPropertyWhenCreatePropertyThenReturnCreatedProperty() {
@@ -46,7 +46,7 @@ class CreatePropertyUseCaseTest {
 
     when(createPropertyPort.create(property)).thenReturn(property);
 
-    final var response = createPropertyUseCase.createProperty(property);
+    final var response = propertyCreatorUseCase.createProperty(property);
 
     assertThat(response).isNotNull();
 

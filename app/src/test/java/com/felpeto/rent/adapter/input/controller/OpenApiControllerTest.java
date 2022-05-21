@@ -2,13 +2,11 @@ package com.felpeto.rent.adapter.input.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.felpeto.rent.adapter.input.controller.OpenApiController;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,14 +19,12 @@ class OpenApiControllerTest {
   private OpenApiController openApi;
 
   @Test
-  @DisplayName("Should not be null")
   void whenCallingShouldNotBeNull() {
     assertThat(openApi.openApi())
         .isNotNull();
   }
 
   @Test
-  @DisplayName("Should openapi response be equals as the assert")
   void shouldOpenApiResponseBeEqualsAsTheAssert() {
     final var openApiResponse = new BufferedReader(
         new InputStreamReader(openApi.openApi(), StandardCharsets.UTF_8))

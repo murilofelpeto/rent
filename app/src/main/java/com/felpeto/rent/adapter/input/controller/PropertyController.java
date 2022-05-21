@@ -1,20 +1,24 @@
 package com.felpeto.rent.adapter.input.controller;
 
+import static com.felpeto.rent.adapter.input.controller.mapper.PageMapper.toPage;
 import static com.felpeto.rent.adapter.input.controller.mapper.PropertyMapper.toProperty;
 import static com.felpeto.rent.adapter.input.controller.mapper.PropertyResponseMapper.toPropertyResponse;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
+import com.felpeto.rent.adapter.input.controller.dto.request.PageDto;
 import com.felpeto.rent.adapter.input.controller.dto.request.PropertyRequestDto;
 import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
-import com.felpeto.rent.core.usecase.CreatePropertyUseCase;
+import com.felpeto.rent.core.usecase.PropertyCreatorUseCase;
+import com.felpeto.rent.core.usecase.PropertyGetterUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import java.util.List;
 import java.util.UUID;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,11 +34,14 @@ import lombok.extern.slf4j.Slf4j;
 @Path("/v1/properties")
 public class PropertyController {
 
-  private final CreatePropertyUseCase createPropertyUseCase;
+  private final PropertyCreatorUseCase propertyCreatorUseCase;
+  private final PropertyGetterUseCase propertyGetterUseCase;
 
   public PropertyController(
-      final CreatePropertyUseCase createPropertyUseCase) {
-    this.createPropertyUseCase = createPropertyUseCase;
+      final PropertyCreatorUseCase propertyCreatorUseCase,
+      final PropertyGetterUseCase propertyGetterUseCase) {
+    this.propertyCreatorUseCase = propertyCreatorUseCase;
+    this.propertyGetterUseCase = propertyGetterUseCase;
   }
 
   @POST
@@ -55,7 +62,7 @@ public class PropertyController {
     log.info("creating property {}", request);
     final var property = toProperty(request);
 
-    final var response = toPropertyResponse(createPropertyUseCase.createProperty(property));
+    final var response = toPropertyResponse(propertyCreatorUseCase.createProperty(property));
 
     return Response.status(Status.CREATED).entity(response).build();
   }
@@ -72,21 +79,20 @@ public class PropertyController {
               content =
               @Content(
                   mediaType = APPLICATION_JSON,
-                  array = @ArraySchema(schema = @Schema(implementation = PropertyResponseDto.class))))
+                  array = @ArraySchema(schema = @Schema(implementation = PropertyResponseDto.class)))),
+          @ApiResponse(
+              responseCode = "204",
+              description = "empty list")
       })
-  public Response getProperties() {
-    final var response = List.of(PropertyResponseDto.builder()
-        .city("São Paulo")
-        .complement("N/A")
-        .country("Brasil")
-        .id(UUID.randomUUID())
-        .propertyKind("house")
-        .number(10)
-        .state("São Paulo")
-        .streetName("Rua da silva")
-        .zipCode("02560-115")
-        .build());
+  public Response getProperties(@NotNull @Valid @BeanParam PageDto pageDto) {
+    final var page = toPage(pageDto);
+    final var properties = propertyGetterUseCase.getProperties(page);
 
+    if (properties.isEmpty()) {
+      return Response.noContent().build();
+    }
+
+    final var response = toPropertyResponse(properties);
     return Response.ok().entity(response).build();
   }
 

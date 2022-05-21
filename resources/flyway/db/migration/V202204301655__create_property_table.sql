@@ -8,7 +8,7 @@ CREATE TABLE property (
    zipcode VARCHAR(50) NOT NULL,
    street_name VARCHAR(255) NOT NULL,
    house_number INT NOT NULL,
-   complement VARCHAR(100) NOT NULL,
+   complement VARCHAR(100) NULL,
    tenant VARCHAR(255) NOT NULL,
    CONSTRAINT pk_property PRIMARY KEY (id)
 );

@@ -10,11 +10,19 @@ import com.felpeto.rent.core.domain.vo.State;
 import com.felpeto.rent.core.domain.vo.StreetName;
 import com.felpeto.rent.core.domain.vo.Tenant;
 import com.felpeto.rent.core.domain.vo.ZipCode;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PropertyMapper {
+
+  public static List<Property> toProperty(final List<PropertyEntity> entities) {
+    return entities.stream()
+        .map(PropertyMapper::toProperty)
+        .collect(Collectors.toList());
+  }
 
   public static Property toProperty(final PropertyEntity entity) {
     return Property.builder()

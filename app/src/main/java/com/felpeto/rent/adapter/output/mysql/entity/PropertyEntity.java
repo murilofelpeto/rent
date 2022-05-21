@@ -70,7 +70,7 @@ public class PropertyEntity {
   @Column(name = "house_number", nullable = false, length = 6)
   private Integer houseNumber;
 
-  @Column(name = "complement", nullable = false, length = 100)
+  @Column(name = "complement", length = 100)
   private String complement;
 
   @Column(name = "tenant", nullable = false)

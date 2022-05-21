@@ -2,7 +2,9 @@ package com.felpeto.rent.adapter.input.controller.mapper;
 
 import static com.felpeto.rent.adapter.input.controller.mapper.PropertyResponseMapper.toPropertyResponse;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
+import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
 import com.felpeto.rent.core.domain.Address;
 import com.felpeto.rent.core.domain.Property;
 import com.felpeto.rent.core.domain.vo.City;
@@ -14,6 +16,7 @@ import com.felpeto.rent.core.domain.vo.StreetName;
 import com.felpeto.rent.core.domain.vo.Tenant;
 import com.felpeto.rent.core.domain.vo.ZipCode;
 import com.github.javafaker.Faker;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +43,17 @@ class PropertyResponseMapperTest {
     assertThat(response.getZipCode()).isEqualTo(address.getZipCode().getValue());
     assertThat(response.getStreetName()).isEqualTo(address.getStreetName().getValue());
 
+  }
+
+  @Test
+  void givenListOfPropertiesWhenMappingThenReturnListOfPropertyResponse() {
+    final var properties = List.of(buildProperty(), buildProperty());
+
+    final var response = toPropertyResponse(properties);
+
+    assertThat(response).isNotNull()
+        .asInstanceOf(list(PropertyResponseDto.class))
+        .hasSize(2);
   }
 
   private Property buildProperty() {

@@ -7,11 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ApplicationScoped
-public class CreatePropertyUseCase {
+public class PropertyCreatorUseCase {
 
   private final CreatePropertyPort createPropertyPort;
 
-  public CreatePropertyUseCase(
+  public PropertyCreatorUseCase(
       final CreatePropertyPort createPropertyPort) {
     this.createPropertyPort = createPropertyPort;
   }
