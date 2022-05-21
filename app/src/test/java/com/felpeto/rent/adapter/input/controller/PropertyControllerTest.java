@@ -24,6 +24,7 @@ import com.felpeto.rent.core.domain.vo.Tenant;
 import com.felpeto.rent.core.domain.vo.ZipCode;
 import com.felpeto.rent.core.usecase.PropertyCreatorUseCase;
 import com.felpeto.rent.core.usecase.PropertyGetterUseCase;
+import com.felpeto.rent.core.usecase.PropertyUpdaterUseCase;
 import com.github.javafaker.Faker;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +49,9 @@ class PropertyControllerTest {
   @Mock
   private PropertyGetterUseCase propertyGetterUseCase;
 
+  @Mock
+  private PropertyUpdaterUseCase propertyUpdaterUseCase;
+
   @InjectMocks
   private PropertyController controller;
 
@@ -64,7 +68,7 @@ class PropertyControllerTest {
     assertThat(response.getEntity()).isNotNull().isInstanceOf(PropertyResponseDto.class);
 
     verify(propertyCreatorUseCase).createProperty(property);
-    verifyNoInteractions(propertyGetterUseCase);
+    verifyNoInteractions(propertyGetterUseCase, propertyUpdaterUseCase);
     verifyNoMoreInteractions(propertyCreatorUseCase);
 
   }
@@ -83,7 +87,7 @@ class PropertyControllerTest {
     assertThat(response.getStatus()).isEqualTo(200);
 
     verify(propertyGetterUseCase).getProperties(page);
-    verifyNoInteractions(propertyCreatorUseCase);
+    verifyNoInteractions(propertyCreatorUseCase, propertyUpdaterUseCase);
     verifyNoMoreInteractions(propertyGetterUseCase);
 
   }
@@ -100,7 +104,7 @@ class PropertyControllerTest {
     assertThat(response.getStatus()).isEqualTo(204);
 
     verify(propertyGetterUseCase).getProperties(page);
-    verifyNoInteractions(propertyCreatorUseCase);
+    verifyNoInteractions(propertyCreatorUseCase, propertyUpdaterUseCase);
     verifyNoMoreInteractions(propertyGetterUseCase);
 
   }
@@ -116,17 +120,26 @@ class PropertyControllerTest {
     assertThat(response.getStatus()).isEqualTo(200);
 
     verify(propertyGetterUseCase).getPropertyByUuid(uuid);
-    verifyNoInteractions(propertyCreatorUseCase);
+    verifyNoInteractions(propertyCreatorUseCase, propertyUpdaterUseCase);
     verifyNoMoreInteractions(propertyGetterUseCase);
   }
 
   @Test
   void givenPropertyRequestWhenUpdatePropertyThenReturnUpdatedProperty() {
     final var request = createPropertyRequest();
-    final var response = controller.updateProperty(UUID.randomUUID().toString(), request);
+    final var uuid = UUID.randomUUID();
+    final var property = toProperty(request);
+
+    when(propertyUpdaterUseCase.updateProperty(uuid, property)).thenReturn(property);
+
+    final var response = controller.updateProperty(uuid.toString(), request);
 
     assertThat(response.getStatus()).isEqualTo(200);
     assertThat(response.getEntity()).isNotNull().isInstanceOf(PropertyResponseDto.class);
+
+    verify(propertyUpdaterUseCase).updateProperty(uuid, property);
+    verifyNoInteractions(propertyCreatorUseCase, propertyGetterUseCase);
+    verifyNoMoreInteractions(propertyUpdaterUseCase);
   }
 
   private Property createProperty() {

@@ -29,12 +29,9 @@ public class GetPropertyGateway implements GetPropertyPort {
 
   @Override
   public Property getPropertyByUuid(final UUID uuid) {
-    final var property = propertyRepository.findByUuid(uuid);
+    final var property = propertyRepository.findByUuid(uuid)
+        .orElseThrow(() -> new RuntimeException(format(PROPERTY_NOT_FOUND, uuid)));
 
-    if (property.isEmpty()) {
-      throw new RuntimeException(format(PROPERTY_NOT_FOUND, uuid));
-    }
-
-    return toProperty(property.get());
+    return toProperty(property);
   }
 }

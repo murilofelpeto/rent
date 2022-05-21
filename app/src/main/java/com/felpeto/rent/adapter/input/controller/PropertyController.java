@@ -10,6 +10,7 @@ import com.felpeto.rent.adapter.input.controller.dto.request.PropertyRequestDto;
 import com.felpeto.rent.adapter.input.controller.dto.response.PropertyResponseDto;
 import com.felpeto.rent.core.usecase.PropertyCreatorUseCase;
 import com.felpeto.rent.core.usecase.PropertyGetterUseCase;
+import com.felpeto.rent.core.usecase.PropertyUpdaterUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,12 +37,15 @@ public class PropertyController {
 
   private final PropertyCreatorUseCase propertyCreatorUseCase;
   private final PropertyGetterUseCase propertyGetterUseCase;
+  private final PropertyUpdaterUseCase propertyUpdaterUseCase;
 
   public PropertyController(
       final PropertyCreatorUseCase propertyCreatorUseCase,
-      final PropertyGetterUseCase propertyGetterUseCase) {
+      final PropertyGetterUseCase propertyGetterUseCase,
+      final PropertyUpdaterUseCase propertyUpdaterUseCase) {
     this.propertyCreatorUseCase = propertyCreatorUseCase;
     this.propertyGetterUseCase = propertyGetterUseCase;
+    this.propertyUpdaterUseCase = propertyUpdaterUseCase;
   }
 
   @POST
@@ -145,17 +149,11 @@ public class PropertyController {
   public Response updateProperty(
       @NotNull @Schema(format = "uuid") @PathParam("id") final String uuid,
       final PropertyRequestDto request) {
-    final var response = PropertyResponseDto.builder()
-        .city(request.getCity())
-        .complement(request.getComplement())
-        .country(request.getCountry())
-        .id(UUID.fromString(uuid))
-        .propertyKind(request.getPropertyKind())
-        .number(request.getNumber())
-        .state(request.getState())
-        .streetName(request.getStreetName())
-        .zipCode(request.getZipCode())
-        .build();
+    final var property = toProperty(request);
+    final var updatedProperty = propertyUpdaterUseCase
+        .updateProperty(UUID.fromString(uuid), property);
+
+    final var response = toPropertyResponse(updatedProperty);
 
     return Response.ok().entity(response).build();
   }
