@@ -4,6 +4,7 @@ import com.felpeto.rent.core.domain.Page;
 import com.felpeto.rent.core.domain.Property;
 import com.felpeto.rent.core.usecase.port.GetPropertyPort;
 import java.util.List;
+import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,5 +22,9 @@ public class PropertyGetterUseCase {
   public List<Property> getProperties(final Page page) {
 
     return getPropertyPort.getAllProperties(page);
+  }
+
+  public Property getPropertyByUuid(final UUID uuid) {
+    return getPropertyPort.getPropertyByUuid(uuid);
   }
 }

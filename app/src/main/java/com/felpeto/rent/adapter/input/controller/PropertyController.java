@@ -109,22 +109,20 @@ public class PropertyController {
               content =
               @Content(
                   mediaType = APPLICATION_JSON,
+                  schema = @Schema(implementation = PropertyResponseDto.class))),
+          @ApiResponse(
+              responseCode = "404",
+              description = "Property not found",
+              content =
+              @Content(
+                  mediaType = APPLICATION_JSON,
                   schema = @Schema(implementation = PropertyResponseDto.class)))
       })
   public Response getPropertyById(
       @NotNull @Schema(format = "uuid") @PathParam("id") final String uuid) {
 
-    final var response = PropertyResponseDto.builder()
-        .city("São Paulo")
-        .complement("N/A")
-        .country("Brasil")
-        .id(UUID.fromString(uuid))
-        .propertyKind("house")
-        .number(10)
-        .state("São Paulo")
-        .streetName("Rua da silva")
-        .zipCode("02560-115")
-        .build();
+    final var property = propertyGetterUseCase.getPropertyByUuid(UUID.fromString(uuid));
+    final var response = toPropertyResponse(property);
 
     return Response.ok().entity(response).build();
   }

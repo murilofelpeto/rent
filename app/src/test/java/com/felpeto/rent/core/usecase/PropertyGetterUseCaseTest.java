@@ -52,6 +52,21 @@ class PropertyGetterUseCaseTest {
     verifyNoMoreInteractions(getPropertyPort);
   }
 
+  @Test
+  void givenUuidWhenGetPropertyByUuidThenReturnProperty() {
+    final var uuid = UUID.randomUUID();
+    final var property = createProperty();
+
+    when(getPropertyPort.getPropertyByUuid(uuid)).thenReturn(property);
+
+    final var response = propertyGetterUseCase.getPropertyByUuid(uuid);
+
+    assertThat(response).isNotNull();
+
+    verify(getPropertyPort).getPropertyByUuid(uuid);
+    verifyNoMoreInteractions(getPropertyPort);
+  }
+
   private Property createProperty() {
     final var address = buildAddress();
     final var propertyKind = faker.options().option(PropertyKind.class);

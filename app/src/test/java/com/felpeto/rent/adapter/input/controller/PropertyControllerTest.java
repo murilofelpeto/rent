@@ -63,12 +63,16 @@ class PropertyControllerTest {
     assertThat(response.getStatus()).isEqualTo(201);
     assertThat(response.getEntity()).isNotNull().isInstanceOf(PropertyResponseDto.class);
 
+    verify(propertyCreatorUseCase).createProperty(property);
+    verifyNoInteractions(propertyGetterUseCase);
+    verifyNoMoreInteractions(propertyCreatorUseCase);
+
   }
 
   @Test
   void givenPropertyRequestWhenFindAllPropertyThenReturnListOfProperties() {
-    final var pageDto = PageDto.builder().limit(faker.number().numberBetween(1, 50))
-        .offset(faker.number().numberBetween(0, 999)).sort("+propertyKind").build();
+    final var pageDto = createPageDto();
+
     final var page = toPage(pageDto);
     final var properties = List.of(createProperty());
 
@@ -86,8 +90,7 @@ class PropertyControllerTest {
 
   @Test
   void givenPropertyRequestWhenFindAllPropertyThenReturnEmptyList() {
-    final var pageDto = PageDto.builder().limit(faker.number().numberBetween(1, 50))
-        .offset(faker.number().numberBetween(0, 999)).sort("+propertyKind").build();
+    final var pageDto = createPageDto();
     final var page = toPage(pageDto);
 
     when(propertyGetterUseCase.getProperties(page)).thenReturn(emptyList());
@@ -104,10 +107,17 @@ class PropertyControllerTest {
 
   @Test
   void givenPropertyRequestWhenFindAByIdPropertyThenReturnProperty() {
-    final var response = controller.getPropertyById(UUID.randomUUID().toString());
+    final var uuid = UUID.randomUUID();
+
+    when(propertyGetterUseCase.getPropertyByUuid(uuid)).thenReturn(createProperty());
+
+    final var response = controller.getPropertyById(uuid.toString());
 
     assertThat(response.getStatus()).isEqualTo(200);
-    assertThat(response.getEntity()).isNotNull().isInstanceOf(PropertyResponseDto.class);
+
+    verify(propertyGetterUseCase).getPropertyByUuid(uuid);
+    verifyNoInteractions(propertyCreatorUseCase);
+    verifyNoMoreInteractions(propertyGetterUseCase);
   }
 
   @Test
@@ -143,6 +153,14 @@ class PropertyControllerTest {
         .propertyKind(faker.options().nextElement(PROPERTIES_KINDS))
         .number(faker.number().numberBetween(1, 1500)).state(faker.address().stateAbbr())
         .streetName(faker.address().streetName()).zipCode(faker.address().zipCode()).build();
+  }
+
+  private PageDto createPageDto() {
+    return PageDto.builder()
+        .limit(faker.number().numberBetween(1, 50))
+        .offset(faker.number().numberBetween(0, 999))
+        .sort("+propertyKind")
+        .build();
   }
 
 }

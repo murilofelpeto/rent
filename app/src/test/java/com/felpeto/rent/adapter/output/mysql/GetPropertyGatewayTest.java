@@ -1,7 +1,9 @@
 package com.felpeto.rent.adapter.output.mysql;
 
+import static java.text.MessageFormat.format;
 import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -14,6 +16,7 @@ import com.felpeto.rent.core.domain.Property;
 import com.felpeto.rent.core.domain.vo.PropertyKind;
 import com.github.javafaker.Faker;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class GetPropertyGatewayTest {
 
+  private static final String PROPERTY_NOT_FOUND = "Property with id {0} not found";
   private final Faker faker = new Faker();
 
   @Mock
@@ -68,6 +72,35 @@ class GetPropertyGatewayTest {
     assertThat(response).isEmpty();
 
     verify(propertyRepository).findAll(page);
+    verifyNoMoreInteractions(propertyRepository);
+  }
+
+  @Test
+  void givenUuidWhenFindByUuidThenReturnProperty() {
+    final var uuid = UUID.randomUUID();
+    final var entity = buildEntity();
+
+    when(propertyRepository.findByUuid(uuid)).thenReturn(Optional.of(entity));
+
+    final var response = getPropertyGateway.getPropertyByUuid(uuid);
+
+    assertThat(response).isNotNull().isInstanceOf(Property.class);
+
+    verify(propertyRepository).findByUuid(uuid);
+    verifyNoMoreInteractions(propertyRepository);
+  }
+
+  @Test
+  void givenInvalidUuidWhenFindByUuidThenThrowException() {
+    final var uuid = UUID.randomUUID();
+
+    when(propertyRepository.findByUuid(uuid)).thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> getPropertyGateway.getPropertyByUuid(uuid))
+        .hasMessage(format(PROPERTY_NOT_FOUND, uuid))
+        .isExactlyInstanceOf(RuntimeException.class);
+
+    verify(propertyRepository).findByUuid(uuid);
     verifyNoMoreInteractions(propertyRepository);
   }
 

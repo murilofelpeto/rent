@@ -98,4 +98,4 @@ insert into property (uuid, property_kind, country, state, city, zipcode, street
 (UNHEX(REPLACE('e243e9f7-7deb-4a24-8386-c04485dfb8a5','-','')),'INDUSTRIAL','Congo','RS','Santo Amaro das Brotas','52455-939','Avenida Emanuelly','8200','Hitmonchan','vicente.menendes'),
 (UNHEX(REPLACE('b87b339e-d8e4-4795-8f27-b5f56384043c','-','')),'INDUSTRIAL','Wallis e Futuna','MS','São Gotardo','26790-939','Avenida Luana','7487','Eevee','fábio.castanheira'),
 (UNHEX(REPLACE('acd30d15-f9e8-40a3-a43c-fd6b15cf9080','-','')),'LAND','Bôsnia','AM','Valparaíso','72376-296','Rodovia Laís Camacho','6485','Nidoran','yasmin.pinheira'),
-(UNHEX(REPLACE('b484a22a-913b-4331-b3eb-1b6de142f0cd','-','')),'INDUSTRIAL','Bôsnia','TO','Barão do Triunfo','03215-631','Rua Lorena Espinhosa','4911','Farfetchd','arthurmiguel.melo'),
+(UNHEX(REPLACE('b484a22a-913b-4331-b3eb-1b6de142f0cd','-','')),'INDUSTRIAL','Bôsnia','TO','Barão do Triunfo','03215-631','Rua Lorena Espinhosa','4911','Farfetchd','arthurmiguel.melo');
